@@ -1,23 +1,13 @@
-export class Team {
+export class ErrorRepository {
   constructor() {
-    this.members = new Set();
+    this.errorsMapArray = new Map([
+      [400, "Bad Request"],
+      [404, "Not Found"],
+      [500, "Internal Server Error"],
+    ]);
   }
 
-  add(person) {
-    if (this.members.has(person)) {
-      throw new Error("Персонаж уже существует в команде");
-    } else {
-      this.members.add(person);
-    }
-  }
-
-  addAll(...persons) {
-    persons.forEach((person) => {
-      this.members.add(person);
-    });
-  }
-
-  toArray() {
-    this.members = Array.from(this.members);
+  translate(code) {
+    return this.errorsMapArray.get(code) || "Unknown error";
   }
 }

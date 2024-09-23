@@ -1,43 +1,19 @@
-import { Team } from "../app.js";
+import { ErrorRepository } from "../app";
 
-test("Проверка на добавление персонажа", () => {
-  const newTeam = new Team();
-  const person = { name: "Oliver", type: "Ogr" };
-  newTeam.add(person);
+const errors = new ErrorRepository();
 
-  const newSet = new Set();
-  newSet.add({ name: "Oliver", type: "Ogr" });
-
-  expect(newTeam.members).toEqual(newSet);
+test("Ошибка 400 - success", () => {
+  expect(errors.translate(400)).toBe("Bad Request");
 });
 
-test("Проверка на добавление cуществующего персонажа", () => {
-  const newTeam = new Team();
-
-  const person = { name: "Oliver", type: "Ogr" };
-  newTeam.add(person);
-
-  expect(function () {
-    newTeam.add(person);
-  }).toThrowError("Персонаж уже существует в команде");
+test("Ошибка 404 - success", () => {
+  expect(errors.translate(404)).toBe("Not Found");
 });
 
-test("Проверка на преобразование в массив", () => {
-  const newTeam = new Team();
+test("Ошибка 500 - success", () => {
+  expect(errors.translate(500)).toBe("Internal Server Error");
+});
 
-  const person1 = { name: "Oliver", age: 34 };
-  const person2 = { name: "Anna", age: 43 };
-  const person3 = { name: "Igor", age: 1412 };
-
-  newTeam.addAll(person1, person2, person3);
-
-  newTeam.toArray();
-
-  const correct = [
-    { name: "Oliver", age: 34 },
-    { name: "Anna", age: 43 },
-    { name: "Igor", age: 1412 },
-  ];
-
-  expect(newTeam.members).toEqual(correct);
+test("Ошибки 700 - false", () => {
+  expect(errors.translate(700)).toBe("Unknown error");
 });
